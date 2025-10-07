@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Faszer Video Loop</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+    }
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      filter: brightness(1.1) contrast(1.2) drop-shadow(0 0 40px #00f) blur(0.5px);
+      display: block;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <video id="faszer" src="faszer.mp4" autoplay loop muted playsinline></video>
+  <script>
+    const video = document.getElementById('faszer');
+    video.volume = 1.0;
+    // Bass boost przez Web Audio API
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = ctx.createMediaElementSource(video);
+    const bass = ctx.createBiquadFilter();
+    bass.type = "lowshelf";
+    bass.frequency.value = 200;
+    bass.gain.value = 25;
+    source.connect(bass).connect(ctx.destination);
+
+    // Po pierwszym kliknięciu włącza dźwięk i bass boost
+    let unlocked = false;
+    document.body.addEventListener('click', () => {
+      if (!unlocked) {
+        video.muted = false;
+        ctx.resume();
+        unlocked = true;
+      }
+    });
+  </script>
+</body>
+</html>
