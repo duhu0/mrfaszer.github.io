@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Faszer Video Loop</title>
+  <title>Mr.Faszer</title>
   <style>
     html, body {
       height: 100%;
@@ -28,7 +28,6 @@
   <script>
     const video = document.getElementById('faszer');
     video.volume = 1.0;
-    // Bass boost przez Web Audio API
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const source = ctx.createMediaElementSource(video);
     const bass = ctx.createBiquadFilter();
@@ -37,7 +36,6 @@
     bass.gain.value = 25;
     source.connect(bass).connect(ctx.destination);
 
-    // Po pierwszym kliknięciu włącza dźwięk i bass boost
     let unlocked = false;
     document.body.addEventListener('click', () => {
       if (!unlocked) {
